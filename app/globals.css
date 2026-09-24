@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* ---- design tokens ------------------------------------------------------------------------------ */
+:root {
+  --bg: #f5f7f6;
+  --panel: #ffffff;
+  --panel-2: #eef2f0;
+  --border: #dde3e0;
+  --text: #0f1a15;
+  --muted: #5b6b63;
+  --faint: #8a9892;
+  --accent: #0e9f6e;         /* pitch green */
+  --accent-soft: #d8f3e8;
+  --home: #2563eb;           /* outcome encoding: home / draw / away */
+  --draw: #8b95a1;
+  --away: #e0801c;
+  --good: #0e9f6e;
+  --bad: #dc2626;
+  --warn: #d97706;
+  --heat-0: #eef2f0;
+  --heat-1: #0e9f6e;
+  --shadow: 0 1px 2px rgb(15 26 21 / 0.06), 0 4px 16px rgb(15 26 21 / 0.04);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0b100e;
+  --panel: #121916;
+  --panel-2: #18211d;
+  --border: #243029;
+  --text: #e7eeea;
+  --muted: #95a39c;
+  --faint: #66756d;
+  --accent: #34d399;
+  --accent-soft: #10392a;
+  --home: #60a5fa;
+  --draw: #9aa4af;
+  --away: #fbbf24;
+  --good: #34d399;
+  --bad: #f87171;
+  --warn: #fbbf24;
+  --heat-0: #18211d;
+  --heat-1: #34d399;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.4);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-panel-2: var(--panel-2);
+  --color-line: var(--border);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-faint: var(--faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-home: var(--home);
+  --color-draw: var(--draw);
+  --color-away: var(--away);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
+  --color-warn: var(--warn);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-mono);
+}
+
+html {
+  background: var(--bg);
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
+}
+
+.num {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { scrollbar-width: none; }
+
+@keyframes shimmer { 0% { opacity: .55 } 50% { opacity: 1 } 100% { opacity: .55 } }
+.skeleton { background: var(--panel-2); border-radius: 10px; animation: shimmer 1.4s ease-in-out infinite; }
+
+input[type="range"] { accent-color: var(--accent); }
