@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { Header } from "@/components/header";
 import "./globals.css";
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Probabilities, not promises. Built on free data: Sport5, football-data.co.uk, UEFA, FPL, martj42 international
           results, 365Scores, Open-Meteo &amp; Google News.
         </footer>
+        <Analytics />
       </body>
     </html>
   );
