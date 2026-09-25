@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- the header logo (components/header.tsx) on a dark tile, so it reads on light and dark browser tabs -->
+  <rect width="64" height="64" rx="14" fill="#0b100e"/>
+  <g transform="translate(10 10) scale(1.8333)" fill="none" stroke="#34d399" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10.5" stroke-width="2.2"/>
+    <path d="M5 15.5 9 11l3 3 7-7.5" stroke-width="2.4"/>
+  </g>
+</svg>
