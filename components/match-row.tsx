@@ -88,25 +88,28 @@ export function MatchRow({ m }: { m: MatchCard }) {
       </div>
 
       {/* the prediction in words, and how it went */}
-      <div className="col-start-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1 text-xs sm:col-start-auto sm:flex-col sm:items-end sm:justify-center">
-        <div className="flex items-center gap-1.5">
+      <div className="col-start-2 flex items-center text-xs sm:col-start-auto sm:flex-col sm:items-end sm:justify-center sm:gap-1">
+        {/* phones: one line (pick, score, verdict, confidence); the goals line and flags show from sm up */}
+        <div className="flex w-full min-w-0 items-center gap-1.5 sm:w-auto">
           <span className="text-faint">Pick</span>
-          <span className={cx("font-semibold", pick.tone)}>{pick.text}</span>
+          <span className={cx("truncate font-semibold", pick.tone)}>{pick.text}</span>
+          <b className="num text-ink sm:hidden">{m.top_score}</b>
           {hit !== null && (
             <span className={cx("inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10px] font-semibold",
               hit ? "bg-good/15 text-good" : "bg-bad/10 text-bad")}>
               {hit ? <Check size={10} strokeWidth={3} /> : <X size={10} strokeWidth={3} />}{hit ? "right" : "wrong"}
             </span>
           )}
+          <span className="ml-auto pl-2 sm:hidden"><ConfidenceDot level={m.confidence} /></span>
         </div>
-        <div className="flex items-center gap-2 text-muted">
+        <div className="hidden items-center gap-2 text-muted sm:flex">
           <span title="Most likely exact score">
             {done ? "Predicted" : "Likely score"} <b className="num text-ink">{m.top_score}</b>
             {exact && <span className="ml-1 font-semibold text-good">exact</span>}
           </span>
           <span title="Probability of over 2.5 goals">O2.5 <b className="num text-ink">{pct(m.over25)}</b></span>
         </div>
-        <div className="flex items-center gap-1.5">
+        <div className="hidden items-center gap-1.5 sm:flex">
           {m.flags.map((f, i) => <FlagIcon key={i} f={f} />)}
           <ConfidenceDot level={m.confidence} />
         </div>

@@ -204,7 +204,7 @@ export function ModelBreakdown({ d, weights }: { d: MatchDetail; weights?: Recor
               <div className="min-w-0">
                 <span className="text-sm font-medium">{MODEL_NAMES[k]?.name ?? k}</span>
                 {weights?.[k] !== undefined && <span className="ml-1.5 text-[11px] text-faint">weight {pct(weights[k])}</span>}
-                <div className="text-[11px] text-muted sm:truncate">{MODEL_NAMES[k]?.desc}</div>
+                <div className="truncate text-[11px] text-muted">{MODEL_NAMES[k]?.desc}</div>
               </div>
               <span className="num shrink-0 text-xs text-muted">xG {b[k].lambda[0].toFixed(2)}–{b[k].lambda[1].toFixed(2)}</span>
             </div>
@@ -407,14 +407,12 @@ export function TeamPanel({ t, side }: { t: TeamBlock; side: "home" | "away" }) 
           <div className="mb-1.5 text-xs text-muted">Availability</div>
           <ul className="space-y-1">
             {t.absences.map((a) => (
-              <li key={a.player} className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-xs">
+              <li key={a.player} className="flex items-center gap-2 text-xs">
                 <Pill tone={a.status === "doubt" ? "warn" : "bad"}>{a.status}</Pill>
                 <span className="font-medium">{a.player}</span>
                 {a.source === "news-model" && <Pill tone="accent">from news</Pill>}
                 <span className="text-faint">{a.role}</span>
-                {/* phones: the note gets its own full-width line; wider screens: one truncated line */}
-                <span className="order-last w-full text-muted sm:order-none sm:w-auto sm:min-w-0 sm:flex-1 sm:truncate"
-                  title={a.note}>{a.note}</span>
+                <span className="min-w-0 flex-1 truncate text-muted" title={a.note}>{a.note}</span>
                 {a.chance !== null && <span className="num text-faint">{pct(a.chance)}</span>}
               </li>
             ))}

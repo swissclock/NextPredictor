@@ -45,9 +45,12 @@ function MatchInner() {
       <div className="card overflow-hidden">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line bg-panel-2/50 px-4 py-2 text-xs text-muted sm:px-6">
           <span className="flex items-center gap-1.5"><CompIcon comp={d.comp} size={13} />{comp?.name ?? d.comp}{d.stage ? ` · ${d.stage}` : ""}{d.round && d.round !== d.stage ? ` · ${d.round}` : ""}</span>
-          <span className="flex items-center gap-2">
-            {d.venue && <span className="flex items-center gap-1"><MapPin size={12} />{d.venue}{d.neutral ? " (neutral)" : ""}</span>}
-            <span>{longDate(d.kickoff)} · {kickoffTime(d.kickoff)}</span>
+          <span className="flex min-w-0 items-center gap-2">
+            {d.venue && <span className="flex min-w-0 items-center gap-1"><MapPin size={12} className="shrink-0" />
+              <span className="truncate">{d.venue}{d.neutral ? " (neutral)" : ""}</span></span>}
+            {/* phones: a short date keeps the bar on one line */}
+            <span className="shrink-0 whitespace-nowrap"><span className="hidden sm:inline">{longDate(d.kickoff)}</span>
+              <span className="sm:hidden">{shortDate(d.kickoff)}</span> · {kickoffTime(d.kickoff)}</span>
           </span>
         </div>
         <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 py-6 sm:px-8">
@@ -59,7 +62,7 @@ function MatchInner() {
               <div className="num text-3xl font-semibold text-muted">{d.top_score.replace("-", " – ")}</div>
             )}
             <div className="mt-1 text-[11px] uppercase tracking-wide text-faint">
-              {done ? `FT · we said ${pick.text.toLowerCase()} ${d.top_score}` : `likely score · ${pick.text.toLowerCase()}`}
+              {done ? `FT · we said ${d.top_score}` : "likely score"}
             </div>
           </div>
           <TeamHead t={d.away} elo={d.away_team.elo} align="left" />
@@ -140,15 +143,12 @@ function MatchInner() {
               const homeIsHome = h.home_id === d.home.id;
               const [l, r] = homeIsHome ? [d.home.short, d.away.short] : [d.away.short, d.home.short];
               return (
-                <li key={i} className="flex items-center gap-2 py-1.5 text-sm sm:gap-3">
-                  {/* date and competition stacked on phones, so the team names keep the width */}
-                  <span className="w-16 shrink-0 text-[11px] leading-tight text-faint sm:flex sm:w-32 sm:gap-2 sm:text-xs">
-                    <span className="num block sm:w-20">{shortDate(h.date + "T12:00:00Z")} {h.date.slice(0, 4)}</span>
-                    <span className="block">{h.comp}</span>
-                  </span>
-                  <span className="min-w-0 flex-1 text-right leading-tight break-words sm:truncate">{l}</span>
-                  <span className="num w-10 shrink-0 text-center font-semibold">{h.hg}–{h.ag}</span>
-                  <span className="min-w-0 flex-1 leading-tight break-words sm:truncate">{r}</span>
+                <li key={i} className="flex items-center gap-3 py-1.5 text-sm">
+                  <span className="num w-20 text-xs text-faint">{shortDate(h.date + "T12:00:00Z")} {h.date.slice(0, 4)}</span>
+                  <span className="w-12 text-xs text-faint">{h.comp}</span>
+                  <span className="flex-1 truncate text-right">{l}</span>
+                  <span className="num w-12 text-center font-semibold">{h.hg}–{h.ag}</span>
+                  <span className="flex-1 truncate">{r}</span>
                 </li>
               );
             })}
@@ -167,7 +167,7 @@ function TeamHead({ t, elo, align }: { t: MatchDetail["home"]; elo: number; alig
       align === "right" ? "sm:flex-row-reverse sm:text-right" : "sm:text-left")}>
       <TeamLogo src={t.logo} name={t.name} size={56} />
       <div className="min-w-0">
-        <div className="text-base font-semibold leading-tight break-words sm:truncate sm:text-xl">{t.name}</div>
+        <div className="truncate text-base font-semibold sm:text-xl">{t.name}</div>
         {t.name_he && <div className="truncate text-xs text-muted" dir="rtl">{t.name_he}</div>}
         <div className="num text-xs text-faint">Elo {elo}</div>
       </div>

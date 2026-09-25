@@ -50,7 +50,7 @@ export default function Home() {
           <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">
             {selected ? longDate(`${selected}T12:00:00Z`) : "Fixtures"}
           </h1>
-          <p className="mt-1 text-sm text-muted">
+          <p className="mt-1 hidden text-sm text-muted sm:block">
             Ligat HaAl · Premier League · Champions, Europa &amp; Conference League · European national teams
           </p>
         </div>
