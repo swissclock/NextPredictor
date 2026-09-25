@@ -50,7 +50,7 @@ function MatchInner() {
             <span>{longDate(d.kickoff)} · {kickoffTime(d.kickoff)}</span>
           </span>
         </div>
-        <div className="grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 py-6 sm:px-8">
+        <div className="grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-3 px-4 py-6 sm:px-8">
           <TeamHead t={d.home} elo={d.home_team.elo} align="right" />
           <div className="text-center">
             {done && d.score ? (
@@ -140,12 +140,15 @@ function MatchInner() {
               const homeIsHome = h.home_id === d.home.id;
               const [l, r] = homeIsHome ? [d.home.short, d.away.short] : [d.away.short, d.home.short];
               return (
-                <li key={i} className="flex items-center gap-3 py-1.5 text-sm">
-                  <span className="num w-20 text-xs text-faint">{shortDate(h.date + "T12:00:00Z")} {h.date.slice(0, 4)}</span>
-                  <span className="w-12 text-xs text-faint">{h.comp}</span>
-                  <span className="flex-1 truncate text-right">{l}</span>
-                  <span className="num w-12 text-center font-semibold">{h.hg}–{h.ag}</span>
-                  <span className="flex-1 truncate">{r}</span>
+                <li key={i} className="flex items-center gap-2 py-1.5 text-sm sm:gap-3">
+                  {/* date and competition stacked on phones, so the team names keep the width */}
+                  <span className="w-16 shrink-0 text-[11px] leading-tight text-faint sm:flex sm:w-32 sm:gap-2 sm:text-xs">
+                    <span className="num block sm:w-20">{shortDate(h.date + "T12:00:00Z")} {h.date.slice(0, 4)}</span>
+                    <span className="block">{h.comp}</span>
+                  </span>
+                  <span className="min-w-0 flex-1 text-right leading-tight break-words sm:truncate">{l}</span>
+                  <span className="num w-10 shrink-0 text-center font-semibold">{h.hg}–{h.ag}</span>
+                  <span className="min-w-0 flex-1 leading-tight break-words sm:truncate">{r}</span>
                 </li>
               );
             })}
@@ -164,7 +167,7 @@ function TeamHead({ t, elo, align }: { t: MatchDetail["home"]; elo: number; alig
       align === "right" ? "sm:flex-row-reverse sm:text-right" : "sm:text-left")}>
       <TeamLogo src={t.logo} name={t.name} size={56} />
       <div className="min-w-0">
-        <div className="truncate text-base font-semibold sm:text-xl">{t.name}</div>
+        <div className="text-base font-semibold leading-tight break-words sm:truncate sm:text-xl">{t.name}</div>
         {t.name_he && <div className="truncate text-xs text-muted" dir="rtl">{t.name_he}</div>}
         <div className="num text-xs text-faint">Elo {elo}</div>
       </div>

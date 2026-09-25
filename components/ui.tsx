@@ -98,7 +98,8 @@ export function Section({ title, subtitle, right, children, className }: {
   title: string; subtitle?: string; right?: React.ReactNode; children: React.ReactNode; className?: string;
 }) {
   return (
-    <section className={cx("card p-4 sm:p-5", className)}>
+    // min-w-0: cards sit in CSS grids, whose columns otherwise grow to their widest content (sideways scroll on phones)
+    <section className={cx("card min-w-0 p-4 sm:p-5", className)}>
       <div className="mb-3 flex items-start justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold tracking-tight">{title}</h2>
