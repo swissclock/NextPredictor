@@ -195,8 +195,13 @@ function Legend() {
       <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-home" /> home win</span>
       <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-draw" /> draw</span>
       <span className="flex items-center gap-1"><span className="h-2 w-2 rounded-full bg-away" /> away win</span>
-      <span>Pick = the most likely of the three (solid segment)</span>
+      <span>Pick = the most likely of the three (solid segment); likely score = the most likely score of that result</span>
       <span className="flex items-center gap-1"><ConfidenceDot level="high" /> model confidence</span>
+      <p className="w-full pt-1">
+        Why a win can come with a likely score other than 1-1: a draw&apos;s chance sits in a few scores (0-0, 1-1, 2-2),
+        while a win&apos;s is spread over many (1-0, 2-0, 2-1…). So 1-1 is often the single most likely score even when a
+        win is the more likely result. The likely score shown is the most likely score of the pick.
+      </p>
     </div>
   );
 }

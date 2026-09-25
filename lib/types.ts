@@ -88,6 +88,8 @@ export interface Markets {
   team_goals_over: { home: Record<string, number>; away: Record<string, number> };
   margin: Record<string, number>;
   top_scores: { score: string; p: number }[];
+  /** most likely score within the most likely result (what the site shows next to the pick) */
+  pick_score: string;
   matrix: number[][];
 }
 

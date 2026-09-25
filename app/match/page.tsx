@@ -7,6 +7,7 @@ import { ArrowLeft, MapPin } from "lucide-react";
 import {
   FactorsPanel, MarketsPanel, ModelBreakdown, NewsPanel, ScoreHeatmap, TeamPanel, ValuePanel, WhatIf,
 } from "@/components/match-panels";
+import { pickOf } from "@/components/match-row";
 import { CompIcon, ConfidenceDot, ErrorBox, Pill, ProbBar, Section, Skeleton, TeamLogo, cx } from "@/components/ui";
 import { useJson } from "@/lib/data";
 import { kickoffTime, longDate, outcomeOf, pct, shortDate } from "@/lib/format";
@@ -31,6 +32,7 @@ function MatchInner() {
   const comp = index?.comps[d.comp];
   const mk = d.prediction.markets;
   const done = d.status === "FT" && d.score;
+  const pick = pickOf(d);
   const actual = outcomeOf(d.score);
   const weights = index?.weights[d.prediction.domain];
   const tie = d.prediction.tie;
@@ -54,10 +56,10 @@ function MatchInner() {
             {done && d.score ? (
               <div className="num text-4xl font-bold tracking-tight">{d.score[0]}<span className="mx-1 text-faint">–</span>{d.score[1]}</div>
             ) : (
-              <div className="num text-3xl font-semibold text-muted">{mk.top_scores[0].score.replace("-", " – ")}</div>
+              <div className="num text-3xl font-semibold text-muted">{d.top_score.replace("-", " – ")}</div>
             )}
             <div className="mt-1 text-[11px] uppercase tracking-wide text-faint">
-              {done ? `FT · we said ${d.top_score}` : "most likely score"}
+              {done ? `FT · we said ${pick.text.toLowerCase()} ${d.top_score}` : `likely score · ${pick.text.toLowerCase()}`}
             </div>
           </div>
           <TeamHead t={d.away} elo={d.away_team.elo} align="left" />
@@ -107,6 +109,13 @@ function MatchInner() {
               <span key={s.score} className="num rounded-md bg-panel-2 px-2 py-1 text-xs"><b>{s.score}</b> <span className="text-muted">{pct(s.p, 1)}</span></span>
             ))}
           </div>
+          {mk.top_scores[0].score !== mk.pick_score && (
+            <p className="mt-3 text-xs text-muted">
+              {mk.top_scores[0].score} is the single most likely score, but the most likely result is{" "}
+              {pick.i === 1 ? "a draw" : `a win for ${pick.i === 0 ? d.home.short : d.away.short}`}. A draw&apos;s chance sits in a few scores (0-0, 1-1, 2-2) while a win&apos;s is spread
+              over many (1-0, 2-0, 2-1, 3-1…), so the score shown with the pick is the most likely score of that result.
+            </p>
+          )}
         </Section>
         <MarketsPanel mk={mk} home={d.home.short} away={d.away.short} />
       </div>
