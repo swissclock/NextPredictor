@@ -23,6 +23,15 @@ export function TeamLogo({ src, name, size = 28 }: { src?: string | null; name: 
       </span>
     );
   }
+  if (src.startsWith("/flags/")) {  // national-team flag: 4:3, centred in the same square footprint as a badge
+    return (
+      <span className="inline-flex shrink-0 items-center justify-center" style={{ width: size, height: size }} aria-hidden>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={src} alt="" onError={() => setErr(true)} loading="lazy"
+          className="rounded-[3px] object-cover ring-1 ring-line" style={{ width: size, height: Math.round(size * 0.75) }} />
+      </span>
+    );
+  }
   return (
     // eslint-disable-next-line @next/next/no-img-element
     <img src={src} alt="" width={size} height={size} onError={() => setErr(true)}

@@ -1,6 +1,7 @@
 "use client";
 
-import { Check, X } from "lucide-react";
+import { useState } from "react";
+import { Check, ChevronDown, X } from "lucide-react";
 import { ErrorBox, Pill, Section, Skeleton, Stat, cx } from "@/components/ui";
 import { useJson } from "@/lib/data";
 import { pct, shortDate } from "@/lib/format";
@@ -176,20 +177,47 @@ export default function Performance() {
               <Stat label="RPS" value={data.live.rps?.toFixed(4)} />
             </div>
             <ul className="divide-y divide-line">
-              {data.live.recent.map((r) => (
-                <li key={r.id} className="flex items-center gap-3 py-2 text-sm">
-                  {r.hit ? <Check size={15} className="text-good" /> : <X size={15} className="text-faint" />}
-                  <span className="num w-14 text-xs text-faint">{shortDate(r.kickoff)}</span>
-                  <span className="min-w-0 flex-1 truncate">{r.home} <b className="num">{r.score[0]}–{r.score[1]}</b> {r.away}</span>
-                  <span className="num text-xs text-muted">{pct(r.p[0])} / {pct(r.p[1])} / {pct(r.p[2])}</span>
-                  {r.exact && <Pill tone="good">exact score</Pill>}
-                </li>
-              ))}
+              {data.live.recent.map((r) => <LiveRow key={r.id} r={r} />)}
             </ul>
           </>
         )}
       </Section>
     </div>
+  );
+}
+
+type LiveItem = PerformanceData["live"]["recent"][number];
+
+/** One graded prediction; tap to see it in full (on phones the collapsed row only has room for the result). */
+function LiveRow({ r }: { r: LiveItem }) {
+  const [open, setOpen] = useState(false);
+  const pick = r.p.indexOf(Math.max(...r.p));
+  const pickText = pick === 1 ? "Draw" : `${pick === 0 ? r.home : r.away} win`;
+  return (
+    <li className="text-sm">
+      <button type="button" onClick={() => setOpen(!open)} aria-expanded={open}
+        className="flex w-full items-center gap-3 py-2 text-left hover:bg-panel-2/60">
+        {r.hit ? <Check size={15} className="shrink-0 text-good" /> : <X size={15} className="shrink-0 text-faint" />}
+        <span className="num w-14 shrink-0 text-xs text-faint">{shortDate(r.kickoff)}</span>
+        <span className="min-w-0 flex-1 truncate">{r.home} <b className="num">{r.score[0]}–{r.score[1]}</b> {r.away}</span>
+        <span className="num hidden text-xs text-muted sm:inline">{pct(r.p[0])} / {pct(r.p[1])} / {pct(r.p[2])}</span>
+        {r.exact && <Pill tone="good" className="hidden sm:inline-flex">exact score</Pill>}
+        <ChevronDown size={14} className={cx("shrink-0 text-faint transition-transform", open && "rotate-180")} />
+      </button>
+      {open && (
+        <div className="mb-2 ml-7 grid gap-1 rounded-lg bg-panel-2 p-3 text-xs sm:ml-[84px]">
+          <div className="font-medium">{r.home} {r.score[0]}–{r.score[1]} {r.away}</div>
+          <div className="text-muted">{COMP_NAMES[r.comp] ?? r.comp} · {shortDate(r.kickoff)}</div>
+          <div>
+            Pick: <b>{pickText}</b> ({pct(r.p[pick])}) · <span className={r.hit ? "text-good" : "text-bad"}>{r.hit ? "right" : "wrong"}</span>
+          </div>
+          <div className="num text-muted">
+            {r.home} {pct(r.p[0])} · draw {pct(r.p[1])} · {r.away} {pct(r.p[2])}
+          </div>
+          <div className="text-muted">Predicted score {r.top_score}{r.exact ? " · exact" : ""}</div>
+        </div>
+      )}
+    </li>
   );
 }
 
