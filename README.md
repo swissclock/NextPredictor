@@ -6,8 +6,8 @@ European national teams.**
 ### → [nextpredictor.vercel.app](https://nextpredictor.vercel.app)
 
 For every match in the next few days the site gives the chance of a home win, a draw and an away win, the most likely
-scores, and the team news behind the numbers. It updates three times a day, and every prediction is logged before
-kickoff so the track record can be checked.
+scores, and the team news behind the numbers. It updates every morning and afternoon, then hourly from 19:00 to
+midnight (Israel time), and every prediction is logged before kickoff so the track record can be checked.
 
 ## What's on the site
 
