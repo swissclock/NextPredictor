@@ -10,7 +10,7 @@ import {
 import { pickOf } from "@/components/match-row";
 import { CompIcon, ConfidenceDot, ErrorBox, Pill, ProbBar, Section, Skeleton, TeamLogo, cx } from "@/components/ui";
 import { useJson } from "@/lib/data";
-import { kickoffTime, longDate, outcomeOf, pct, shortDate } from "@/lib/format";
+import { TZ, kickoffTime, longDate, outcomeOf, pct, shortDate } from "@/lib/format";
 import type { IndexData, MatchDetail } from "@/lib/types";
 
 export default function MatchPage() {
@@ -39,7 +39,7 @@ function MatchInner() {
 
   return (
     <div className="space-y-4 pt-1">
-      <Link href="/" className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft size={15} /> All matches</Link>
+      <Link href={`/?d=${new Date(d.kickoff).toLocaleDateString("en-CA", { timeZone: TZ })}`} className="inline-flex items-center gap-1 text-sm text-muted hover:text-ink"><ArrowLeft size={15} /> All matches</Link>
 
       {/* header */}
       <div className="card overflow-hidden">

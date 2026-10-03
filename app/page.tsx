@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Flame, Scale, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 import { MatchRow } from "@/components/match-row";
 import { CompIcon, ConfidenceDot, ErrorBox, Pill, Skeleton, TeamLogo, cx, useStoredPref } from "@/components/ui";
@@ -25,13 +26,24 @@ function inFilter(m: MatchCard, f: string, comps: IndexData["comps"]) {
 }
 
 export default function Home() {
+  return (
+    <Suspense fallback={<LoadingState />}>
+      <HomeInner />
+    </Suspense>
+  );
+}
+
+function HomeInner() {
   const { data, error, loading } = useJson<IndexData>("index.json");
-  const [day, setDay] = useState<string | null>(null);
+  const router = useRouter();
+  // the chosen day lives in the URL (?d=YYYY-MM-DD) so Back from a match returns to it
+  const day = useSearchParams().get("d");
+  const setDay = (d: string) => router.replace(d === today ? "/" : `/?d=${d}`, { scroll: false });
   const [filter, pickFilter] = useStoredPref("filter", "all");
 
   const days = data?.days ?? [];
   const today = days.find((d) => d.label === "Today")?.date ?? days[1]?.date;
-  const selected = day ?? today ?? null;
+  const selected = (day && days.some((d) => d.date === day) ? day : today) ?? null;
   const block = days.find((d) => d.date === selected);
   const matches = useMemo(
     () => (block?.matches ?? []).filter((m) => data && inFilter(m, filter, data.comps)),
