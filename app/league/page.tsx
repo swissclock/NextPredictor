@@ -69,16 +69,16 @@ function SimTable({ d }: { d: LeagueData }) {
   return (
     <div className="card overflow-hidden">
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[780px] text-sm">
+        <table className="w-full min-w-[820px] text-sm">
           <thead>
             <tr className="border-b border-line text-left text-[11px] uppercase tracking-wide text-muted">
               <th className="w-8 py-2.5 pl-4">#</th>
               <th className="py-2.5">Team</th>
-              <th className="num text-center">P</th>
-              <th className="num text-center">W-D-L</th>
-              <th className="num text-center">GD</th>
-              <th className="num text-center">Pts</th>
-              <th className="num text-center" title="Expected final points">xPts</th>
+              <th className="num px-2.5 text-center">Pts</th>
+              <th className="num px-2.5 text-center">P</th>
+              <th className="num whitespace-nowrap px-2.5 text-center">W-D-L</th>
+              <th className="num px-2.5 text-center">GD</th>
+              <th className="num px-2.5 text-center" title="Expected final points">xPts</th>
               {cols.map(([, l]) => <th key={l} className="text-center">{l}</th>)}
               <th className="text-center">Finish</th>
               <th className="pr-4 text-center">Elo</th>
@@ -89,11 +89,11 @@ function SimTable({ d }: { d: LeagueData }) {
               <tr key={t.id} className="hover:bg-panel-2/50">
                 <td className="num py-2 pl-4 text-muted">{i + 1}</td>
                 <td className="py-2"><TeamCell t={t} /></td>
-                <td className="num text-center text-muted">{t.pl}</td>
-                <td className="num text-center text-muted">{t.w}-{t.d}-{t.l}</td>
-                <td className="num text-center">{t.gd! > 0 ? "+" : ""}{t.gd}</td>
-                <td className="num text-center font-semibold">{t.pts}</td>
-                <td className="num text-center text-muted">{t.exp_pts?.toFixed(0)}</td>
+                <td className="num px-2.5 text-center font-semibold">{t.pts}</td>
+                <td className="num px-2.5 text-center text-muted">{t.pl}</td>
+                <td className="num whitespace-nowrap px-2.5 text-center text-muted">{t.w}-{t.d}-{t.l}</td>
+                <td className="num px-2.5 text-center">{t.gd! > 0 ? "+" : ""}{t.gd}</td>
+                <td className="num px-2.5 text-center text-muted">{t.exp_pts?.toFixed(0)}</td>
                 {cols.map(([k]) => {
                   const v = t[k as keyof LeagueRow] as number | undefined;
                   return (
