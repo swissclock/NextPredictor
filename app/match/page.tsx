@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { ArrowLeft, MapPin } from "lucide-react";
 import {
-  FactorsPanel, MarketsPanel, ModelBreakdown, NewsPanel, ScoreHeatmap, TeamPanel, ValuePanel, WhatIf,
+  FactorsPanel, MarketsPanel, ModelBreakdown, NewsPanel, OddsPanel, ScoreHeatmap, TeamPanel, ValuePanel, WhatIf,
 } from "@/components/match-panels";
 import { pickOf } from "@/components/match-row";
 import { CompIcon, ConfidenceDot, ErrorBox, Pill, ProbBar, Section, Skeleton, TeamLogo, cx } from "@/components/ui";
@@ -87,6 +87,8 @@ function MatchInner() {
           </div>
         </div>
       </div>
+
+      <OddsPanel d={d} />
 
       {tie && tie.p_home_progress !== undefined && (
         <Section title={tie.leg === 2 ? "Second leg — who goes through?" : "First leg — tie outlook"}

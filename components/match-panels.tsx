@@ -217,6 +217,57 @@ export function ModelBreakdown({ d, weights }: { d: MatchDetail; weights?: Recor
 }
 
 /* ---------------- value vs market ---------------- */
+/* ---------------- bookmaker odds ---------------- */
+export function OddsPanel({ d }: { d: MatchDetail }) {
+  const books = Object.values(d.odds ?? {});
+  if (!books.length) return null;
+  // our odds-free numbers where the live blend leans on odds (EPL), otherwise the prediction shown above
+  const us = d.prediction.value?.model_p ?? d.p;
+  const closed = books.every((b) => b.closed);
+  const heads = [d.home.short, "Draw", d.away.short];
+  const cell = "num rounded-lg bg-panel-2 px-1 py-1.5 text-center";
+  return (
+    <Section title="Bookmaker odds"
+      subtitle={`${closed ? "Closing" : "Latest"} prices; % is each bookmaker's chance once its margin is removed`}>
+      <div className="grid grid-cols-[minmax(0,5.5rem)_repeat(3,minmax(0,1fr))] items-center gap-1.5 sm:grid-cols-[8rem_repeat(3,minmax(0,1fr))] sm:gap-2">
+        <div />
+        {heads.map((h, i) => (
+          <div key={i} className={cx("truncate text-center text-[11px] font-medium", ["text-home", "text-draw", "text-away"][i])}>{h}</div>
+        ))}
+        {books.map((b) => [
+          <div key={b.name} className="min-w-0">
+            <div className="truncate text-sm font-semibold">{b.name}</div>
+            <div className="num text-[11px] text-faint">{(b.margin * 100).toFixed(1)}% margin</div>
+          </div>,
+          ...[0, 1, 2].map((i) => {
+            const moved = Math.abs(b.open[i] - b.odds[i]) >= 0.01;
+            return (
+              <div key={`${b.name}${i}`} className={cell}>
+                <div className="text-base font-semibold leading-tight">{b.odds[i].toFixed(2)}</div>
+                <div className="truncate text-[11px] text-muted">
+                  {pct(b.implied[i])}
+                  {moved && <span className="hidden text-faint sm:inline"> · from {b.open[i].toFixed(2)}</span>}
+                </div>
+              </div>
+            );
+          }),
+        ])}
+        <div className="min-w-0">
+          <div className="truncate text-sm font-semibold text-accent">Our model</div>
+          <div className="truncate text-[11px] text-faint">{d.prediction.value ? "odds-free" : "fair odds"}</div>
+        </div>
+        {[0, 1, 2].map((i) => (
+          <div key={i} className={cx(cell, "bg-accent-soft")}>
+            <div className="text-base font-semibold leading-tight">{(1 / us[i]).toFixed(2)}</div>
+            <div className="text-[11px] text-muted">{pct(us[i])}</div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-3 text-[11px] text-faint">Prices from 365Scores. Not betting advice.</p>
+    </Section>
+  );
+}
+
 export function ValuePanel({ d }: { d: MatchDetail }) {
   const v = d.prediction.value;
   if (!v) return null;

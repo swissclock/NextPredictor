@@ -31,6 +31,16 @@ export interface Tie {
   p_home_progress?: number;
 }
 
+/** One bookmaker's 1X2 prices (home, draw, away); implied = its probabilities with the margin removed */
+export interface BookOdds {
+  name: string;
+  odds: Triple;
+  open: Triple;
+  implied: Triple;
+  margin: number;
+  closed: boolean;
+}
+
 export interface MatchCard {
   id: string;
   sid: string;
@@ -54,6 +64,7 @@ export interface MatchCard {
   flags: Flag[];
   tie?: Tie | null;
   prematch?: boolean;
+  odds?: Record<string, BookOdds> | null;
 }
 
 export interface DayBlock {
