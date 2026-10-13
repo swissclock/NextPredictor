@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Check, ChevronDown, X } from "lucide-react";
+import { MarketTrackerSection } from "@/components/market-tracker";
 import { ErrorBox, Pill, Section, Skeleton, Stat, cx } from "@/components/ui";
 import { useJson } from "@/lib/data";
 import { pct, shortDate } from "@/lib/format";
@@ -13,10 +14,11 @@ const COMP_NAMES: Record<string, string> = {
   FRI: "Friendlies", INTQ: "Other qualifiers", CONT: "Continental finals", INT: "Other internationals",
 };
 const DOMAIN_NAMES: Record<string, string> = {
-  club_market: "Premier League (odds available)", club: "Clubs without odds (Ligat HaAl, UEFA cups)", nation: "National teams",
+  club_market: "Premier League (odds available)", club_book: "Ligat HaAl & UEFA cups (Bet365 / Winner odds)",
+  club: "Clubs without odds", nation_book: "National teams (Bet365 / Winner odds)", nation: "National teams without odds",
 };
 const MODEL_LABEL: Record<string, string> = {
-  ensemble: "Blend (published)", elo: "Team ratings", dc: "Attack & defence", dcx: "Attack & defence (xG)", market: "Bookmakers", independent: "Our model (no odds)", base_rate: "Base rate",
+  ensemble: "Blend (published)", elo: "Team ratings", dc: "Attack & defence", dcx: "Attack & defence (xG)", market: "Bookmakers", book: "Bookmakers (Bet365 / Winner)", independent: "Our model (no odds)", base_rate: "Base rate",
 };
 const ABSENCE_LABEL: Record<string, string> = {
   abs_fwd: "Missing forward: own goals", abs_mid: "Missing midfielder: own goals",
@@ -92,7 +94,13 @@ export default function Performance() {
                   <td className="num text-right">{pct(v.ensemble.accuracy, 1)}</td>
                   <td className="num text-right font-semibold">{v.ensemble.rps.toFixed(4)}</td>
                   <td className="num text-right text-muted">{v.base_rate.rps.toFixed(4)}</td>
-                  <td className="num text-right text-muted">{v.market ? v.market.rps.toFixed(4) : "–"}</td>
+                  <td className="num text-right text-muted">
+                    {v.market ? v.market.rps.toFixed(4) : "–"}
+                    {/* odds only go back to 2024-09: when they cover fewer games, show ours on those same games */}
+                    {v.market && v.market_ours && v.market.n < v.ensemble.n && (
+                      <div className="whitespace-nowrap text-[10px] text-faint">ours {v.market_ours.rps.toFixed(4)} · {v.market.n} games</div>
+                    )}
+                  </td>
                   <td className="num text-right text-good">{((1 - v.ensemble.rps / v.base_rate.rps) * 100).toFixed(1)}%</td>
                 </tr>
               ))}
@@ -100,6 +108,8 @@ export default function Performance() {
           </table>
         </div>
       </Section>
+
+      <MarketTrackerSection t={data.market} compNames={COMP_NAMES} />
 
       <div className="grid gap-4 lg:grid-cols-2">
         {Object.entries(data.domains ?? {}).map(([dom, v]) => (

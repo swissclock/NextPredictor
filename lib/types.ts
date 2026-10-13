@@ -264,15 +264,29 @@ export interface Metric {
   accuracy?: number;
 }
 
+/** Model vs market tracker: our odds-free prediction against Bet365 and Winner on finished games */
+export interface MarketTracker {
+  n: number;
+  n_live?: number;
+  since?: string;
+  summary?: { group: string; n: number; ours: number; bet365: number; winner: number; margin_bet365: number; margin_winner: number }[];
+  /** games bucketed by how much more we rated our favoured outcome than the market did */
+  disagree?: { lo: number; hi: number; n: number; ours: number; market: number; happened: number }[];
+  bets?: Record<string, { n: number; roi: number; ci: number; curve: [string, number][] }>;
+  recent?: { id: string; kickoff: string; comp: string; home: string; away: string; score: [number, number];
+    k: number; ours: number; market: number; hit: number; source: "live" | "backtest" }[];
+}
+
 export interface PerformanceData {
   generated_at?: string;
+  market?: MarketTracker;
   domains: Record<string, Record<string, Metric | unknown> & {
     ensemble: Metric;
     base_rate: Metric;
     calibration: { bin: number; pred: number; obs: number; n: number }[];
     weights: Record<string, number>;
   }>;
-  comps: Record<string, { ensemble: Metric; base_rate: Metric; market?: Metric; period: [string, string] }>;
+  comps: Record<string, { ensemble: Metric; base_rate: Metric; market?: Metric; market_ours?: Metric; period: [string, string] }>;
   context?: Record<string, Record<string, { coef: number; se: number; n: number; applied?: boolean }>>;
   /** learned absence effects per domain; `_n_matches` = matches with 365Scores lineups used */
   absence?: Record<string, Record<string, unknown>>;

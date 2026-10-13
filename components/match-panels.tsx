@@ -188,13 +188,14 @@ const MODEL_NAMES: Record<string, { name: string; desc: string }> = {
   dc: { name: "Attack & defence", desc: "Team strengths from recent goals" },
   dcx: { name: "Attack & defence (xG)", desc: "The same, also using expected goals" },
   market: { name: "Bookmakers", desc: "Odds turned into expected goals" },
+  book: { name: "Bookmakers (Bet365 / Winner)", desc: "Their 1X2 odds turned into expected goals" },
   independent: { name: "Our model (no odds)", desc: "The blend without bookmaker input" },
   ensemble_base: { name: "Blend", desc: "Weighted mix, before injuries and other context" },
 };
 
 export function ModelBreakdown({ d, weights }: { d: MatchDetail; weights?: Record<string, number> }) {
   const b = d.prediction.breakdown;
-  const order = ["elo", "dc", "dcx", "market", "independent", "ensemble_base"].filter((k) => b[k]);
+  const order = ["elo", "dc", "dcx", "market", "book", "independent", "ensemble_base"].filter((k) => b[k]);
   return (
     <Section title="Model breakdown" subtitle={`Confidence ${d.prediction.confidence.label} · models disagree by ±${pct(d.prediction.confidence.model_spread, 1)}`}>
       <div className="space-y-3">
